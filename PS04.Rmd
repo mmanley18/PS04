@@ -1,6 +1,6 @@
 ---
 title: "STAT/MATH 495: Problem Set 04"
-author: "WRITE YOUR NAME HERE"
+author: "Meredith Manley"
 date: "2017-10-03"
 output:
   html_document:
@@ -54,20 +54,387 @@ credit_test <- credit %>%
 ```
 
 
-# RMSE vs number of coefficients
+> We can expect that when calculating the RMSE from predictions using the training data that it will be lower than the RMSE from predictions using the testing data (aka indicates a more accurate model) because the model is fit to meet the characteristics of the training data, thus the predictions will be a better representation of the training data, but not necessarily the entire population.
 
-```{r, echo=TRUE, warning=FALSE, message=FALSE}
-# Placeholder vectors of length 7. For now, I've filled them with arbitrary 
-# values; you will fill these in
-RMSE_train <- runif(n=7)
-RMSE_test <- runif(n=7)
+#### model1
+```{r, warning=FALSE}
+
+model1 <- lm(model1_formula, data=credit_train)
+
+# extract regression table in tidy format
+model1 %>% 
+  broom::tidy()
+
+# extract point-by-point info in tidy format
+model1 %>% 
+  broom::augment() %>% 
+  head()
+
+# extract summary stats info in tidy format
+model1 %>% 
+  broom::glance()
+
+# generate y_hat on test data- saved as a dataframe
+y_hat <- predict(model1, newdata=credit_test) %>% 
+  tibble::as.tibble()
+
+# convert y_hat to a vector and add y_hat to test dataset
+y_hat <- y_hat$value
+
+# report RMSE on test data
+RMSE1 <- credit_test %>%
+  mutate(y_hat = y_hat) %>%
+  mutate(epsilon = Balance - y_hat) %>%
+  mutate(MSE = mean((Balance - y_hat)^2)) %>%
+  mutate(RMSE = sqrt(MSE)) %>%
+  summarise(mean(RMSE))
+
+RMSE1 <- as.numeric(RMSE1)
+
+# generate y_hat on training data - saved as a dataframe
+y_hat <- predict(model1, newdata=credit_train) %>% 
+  tibble::as.tibble()
+
+# convert y_hat to a vector and add y_hat to training dataset
+y_hat <- y_hat$value
+
+# report RMSE on training data
+RMSE1t <- credit_train %>%
+  mutate(y_hat = y_hat) %>%
+  mutate(epsilon = Balance - y_hat) %>%
+  mutate(MSE = mean((Balance - y_hat)^2)) %>%
+  mutate(RMSE = sqrt(MSE)) %>%
+  summarise(mean(RMSE))
+
+RMSE1t <- as.numeric(RMSE1t)
+```
 
 
-# Do your work here:
+#### model2
+```{r, warning=FALSE}
+model2 <- lm(model2_formula, data=credit_train)
 
+# extract regression table in tidy format
+model2 %>% 
+  broom::tidy()
+
+# extract point-by-point info in tidy format
+model2 %>% 
+  broom::augment() %>% 
+  head()
+
+# extract summary stats info in tidy format
+model2 %>% 
+  broom::glance()
+
+# generate y_hat on test data- saved as a dataframe
+y_hat <- predict(model2, newdata = credit_test) %>% 
+  tibble::as.tibble()
+
+# convert y_hat to a vector and add y_hat to test dataset
+y_hat <- y_hat$value
+
+# report RMSE on test data
+RMSE2 <- credit_test %>%
+  mutate(y_hat = y_hat) %>%
+  mutate(epsilon = Balance - y_hat) %>%
+  mutate(MSE = mean((Balance - y_hat)^2)) %>%
+  mutate(RMSE = sqrt(MSE)) %>%
+  summarise(mean(RMSE))
+
+RMSE2 <- as.numeric(RMSE2)
+
+# generate y_hat on training data- saved as a dataframe
+y_hat <- predict(model2, newdata = credit_train) %>% 
+  tibble::as.tibble()
+
+# convert y_hat to a vector and add y_hat to training dataset
+y_hat <- y_hat$value
+
+# report RMSE on train data
+RMSE2t <- credit_train %>%
+  mutate(y_hat = y_hat) %>%
+  mutate(epsilon = Balance - y_hat) %>%
+  mutate(MSE = mean((Balance - y_hat)^2)) %>%
+  mutate(RMSE = sqrt(MSE)) %>%
+  summarise(mean(RMSE))
+
+RMSE2t <- as.numeric(RMSE2t)
+```
+
+
+#### model3
+```{r, warning=FALSE}
+model3 <- lm(model3_formula, data=credit_train)
+
+# extract regression table in tidy format
+model3 %>% 
+  broom::tidy()
+
+# extract point-by-point info in tidy format
+model3 %>% 
+  broom::augment() %>% 
+  head()
+
+# extract summary stats info in tidy format
+model3 %>% 
+  broom::glance()
+
+# generate y_hat on test data - saved as a dataframe
+y_hat <- predict(model3, newdata = credit_test) %>% 
+  tibble::as.tibble()
+
+# convert y_hat to a vector and add y_hat to test dataset
+y_hat <- y_hat$value
+
+# report RMSE on test data
+RMSE3 <- credit_test %>%
+  mutate(y_hat = y_hat) %>%
+  mutate(epsilon = Balance - y_hat) %>%
+  mutate(MSE = mean((Balance - y_hat)^2)) %>%
+  mutate(RMSE = sqrt(MSE)) %>%
+  summarise(mean(RMSE))
+
+RMSE3 <- as.numeric(RMSE3)
+
+# generate y_hat on training data - saved as a dataframe
+y_hat <- predict(model3, newdata = credit_train) %>% 
+  tibble::as.tibble()
+
+# convert y_hat to a vector and add y_hat to training dataset
+y_hat <- y_hat$value
+
+# report RMSE on train data
+RMSE3t <- credit_train %>%
+  mutate(y_hat = y_hat) %>%
+  mutate(epsilon = Balance - y_hat) %>%
+  mutate(MSE = mean((Balance - y_hat)^2)) %>%
+  mutate(RMSE = sqrt(MSE)) %>%
+  summarise(mean(RMSE))
+
+RMSE3t <- as.numeric(RMSE3t)
+```
+
+#### model4
+```{r, warning=FALSE}
+model4 <- lm(model4_formula, data=credit_train)
+
+# extract regression table in tidy format
+model2 %>% 
+  broom::tidy()
+
+# extract point-by-point info in tidy format
+model2 %>% 
+  broom::augment() %>% 
+  head()
+
+# extract summary stats info in tidy format
+model4 %>% 
+  broom::glance()
+
+# generate y_hat on test data- saved as a dataframe
+y_hat <- predict(model4, newdata = credit_test) %>% 
+  tibble::as.tibble()
+
+# convert y_hat to a vector and add y_hat to test dataset
+y_hat <- y_hat$value
+
+# report RMSE on test data
+RMSE4 <- credit_test %>%
+  mutate(y_hat = y_hat) %>%
+  mutate(epsilon = Balance - y_hat) %>%
+  mutate(MSE = mean((Balance - y_hat)^2)) %>%
+  mutate(RMSE = sqrt(MSE)) %>%
+  summarise(mean(RMSE))
+
+RMSE4 <- as.numeric(RMSE4)
+
+# generate y_hat on training data- saved as a dataframe
+y_hat <- predict(model4, newdata = credit_train) %>% 
+  tibble::as.tibble()
+
+# convert y_hat to a vector and add y_hat to training dataset
+y_hat <- y_hat$value
+
+# report RMSE on train data
+RMSE4t <- credit_train %>%
+  mutate(y_hat = y_hat) %>%
+  mutate(epsilon = Balance - y_hat) %>%
+  mutate(MSE = mean((Balance - y_hat)^2)) %>%
+  mutate(RMSE = sqrt(MSE)) %>%
+  summarise(mean(RMSE))
+
+RMSE4t <- as.numeric(RMSE4t)
+
+```
+
+
+#### model5
+```{r, warning=FALSE}
+model5 <- lm(model5_formula, data=credit_train)
+
+# extract regression table in tidy format
+model5 %>% 
+  broom::tidy()
+
+# extract point-by-point info in tidy format
+model5 %>% 
+  broom::augment() %>% 
+  head()
+
+# extract summary stats info in tidy format
+model5 %>% 
+  broom::glance()
+
+# generate y_hat on test data - saved as a dataframe
+y_hat <- predict(model5, newdata = credit_test) %>% 
+  tibble::as.tibble()
+
+# convert y_hat to a vector and add y_hat to test dataset
+y_hat <- y_hat$value
+
+# report RMSE on test data
+RMSE5 <- credit_test %>%
+  mutate(y_hat = y_hat) %>%
+  mutate(epsilon = Balance - y_hat) %>%
+  mutate(MSE = mean((Balance - y_hat)^2)) %>%
+  mutate(RMSE = sqrt(MSE)) %>%
+  summarise(mean(RMSE))
+
+RMSE5 <- as.numeric(RMSE5)
+
+# generate y_hat on training data - saved as a dataframe
+y_hat <- predict(model5, newdata = credit_train) %>% 
+  tibble::as.tibble()
+
+# convert y_hat to a vector and add y_hat to training dataset
+y_hat <- y_hat$value
+
+# report RMSE on train data
+RMSE5t <- credit_train %>%
+  mutate(y_hat = y_hat) %>%
+  mutate(epsilon = Balance - y_hat) %>%
+  mutate(MSE = mean((Balance - y_hat)^2)) %>%
+  mutate(RMSE = sqrt(MSE)) %>%
+  summarise(mean(RMSE))
+
+RMSE5t <- as.numeric(RMSE5t)
+```
+
+
+#### model6
+```{r, warning=FALSE}
+model6 <- lm(model6_formula, data=credit_train)
+
+# extract regression table in tidy format
+model6 %>% 
+  broom::tidy()
+
+# extract point-by-point info in tidy format
+model6 %>% 
+  broom::augment() %>% 
+  head()
+
+# extract summary stats info in tidy format
+model6 %>% 
+  broom::glance()
+
+# generate y_hat on test data - saved as a dataframe
+y_hat <- predict(model6, newdata = credit_test) %>% 
+  tibble::as.tibble()
+
+# convert y_hat to a vector and add y_hat to test dataset
+y_hat <- y_hat$value
+
+# report RMSE on test data
+RMSE6 <- credit_test %>%
+  mutate(y_hat = y_hat) %>%
+  mutate(epsilon = Balance - y_hat) %>%
+  mutate(MSE = mean((Balance - y_hat)^2)) %>%
+  mutate(RMSE = sqrt(MSE)) %>%
+  summarise(mean(RMSE))
+
+RMSE6 <- as.numeric(RMSE6)
+
+# generate y_hat on training data - saved as a dataframe
+y_hat <- predict(model6, newdata = credit_train) %>% 
+  tibble::as.tibble()
+
+# convert y_hat to a vector and add y_hat to training dataset
+y_hat <- y_hat$value
+
+# report RMSE on train data
+RMSE6t <- credit_train %>%
+  mutate(y_hat = y_hat) %>%
+  mutate(epsilon = Balance - y_hat) %>%
+  mutate(MSE = mean((Balance - y_hat)^2)) %>%
+  mutate(RMSE = sqrt(MSE)) %>%
+  summarise(mean(RMSE))
+
+RMSE6t <- as.numeric(RMSE6t)
+```
+
+
+#### model7
+```{r, warning=FALSE}
+model7 <- lm(model7_formula, data=credit_train)
+
+# extract regression table in tidy format
+model7 %>% 
+  broom::tidy()
+
+# extract point-by-point info in tidy format
+model7 %>% 
+  broom::augment() %>% 
+  head()
+
+# extract summary stats info in tidy format
+model7 %>% 
+  broom::glance()
+
+# generate y_hat on test data - saved as a dataframe
+y_hat <- predict(model7, newdata = credit_test) %>% 
+  tibble::as.tibble()
+
+# convert y_hat to a vector and add y_hat to test dataset
+y_hat <- y_hat$value
+
+# report RMSE on test data
+RMSE7 <- credit_test %>%
+  mutate(y_hat = y_hat) %>%
+  mutate(epsilon = Balance - y_hat) %>%
+  mutate(MSE = mean((Balance - y_hat)^2)) %>%
+  mutate(RMSE = sqrt(MSE)) %>%
+  summarise(mean(RMSE))
+
+RMSE7 <- as.numeric(RMSE7)
+
+# generate y_hat on training data - saved as a dataframe
+y_hat <- predict(model7, newdata = credit_train) %>% 
+  tibble::as.tibble()
+
+# convert y_hat to a vector and add y_hat to training dataset
+y_hat <- y_hat$value
+
+# report RMSE on train data
+RMSE7t <- credit_train %>%
+  mutate(y_hat = y_hat) %>%
+  mutate(epsilon = Balance - y_hat) %>%
+  mutate(MSE = mean((Balance - y_hat)^2)) %>%
+  mutate(RMSE = sqrt(MSE)) %>%
+  summarise(mean(RMSE))
+
+RMSE7t <- as.numeric(RMSE7t)
+```
+
+
+## RMSE vs. Number of Coefficients
+```{r, warning=FALSE}
+RMSE_train <- c(RMSE1t, RMSE2t, RMSE3t, RMSE4t, RMSE5t, RMSE6t, RMSE7t)
+RMSE_test <- c(RMSE1, RMSE2, RMSE3, RMSE4, RMSE5, RMSE6, RMSE7)
 
 # Save results in a data frame. Note this data frame is in wide format.
-results <- data_frame(
+results <- data.frame(
   num_coefficients = 1:7,
   RMSE_train,
   RMSE_test
@@ -94,6 +461,9 @@ ggplot(results, aes(x=num_coefficients, y=RMSE, col=type)) +
 
 Compare and contrast the two curves and hypothesize as to the root cause of any differences.
 
+> As anticipated, the RMSE was lower when predictions were calculated on the training dataset rather than on the test dataset. With that being said, the curve that represents the performance of the model using training data does not provide us with an accurate insight on model performance as it was trained and tested using the same data. Therefore, if we wish to take anything away from this graphic we will need to focus on the red curve, representing the test data used to evaluated performance of the fitted model. 
+We see that both curves have relatively high RMSE values when coeff = 1,2 and then drops of at 3, increases ever so slightly for 4 coefficients and then increases more drastically for 5,6,7 coefficients. Therefore based on this graphic it appears that the most efficient model is that which includes 3 coefficients
+
 
 
 # Bonus
@@ -102,6 +472,419 @@ Repeat the whole process, but let `credit_train` be a random sample of size 380
 from `credit` instead of 20. Now compare and contrast this graph with the
 one above and hypothesize as to the root cause of any differences.
 
-```{r, echo=FALSE}
+```{r}
+set.seed(79)
+credit_train <- credit %>% 
+  sample_n(380)
+credit_test <- credit %>% 
+  anti_join(credit_train, by="ID")
+```
+
+
+#### model1
+```{r, warning=FALSE}
+
+model1 <- lm(model1_formula, data=credit_train)
+
+# extract regression table in tidy format
+model1 %>% 
+  broom::tidy()
+
+# extract point-by-point info in tidy format
+model1 %>% 
+  broom::augment() %>% 
+  head()
+
+# extract summary stats info in tidy format
+model1 %>% 
+  broom::glance()
+
+# generate y_hat on test data- saved as a dataframe
+y_hat <- predict(model1, newdata=credit_test) %>% 
+  tibble::as.tibble()
+
+# convert y_hat to a vector and add y_hat to test dataset
+y_hat <- y_hat$value
+
+# report RMSE on test data
+RMSE1 <- credit_test %>%
+  mutate(y_hat = y_hat) %>%
+  mutate(epsilon = Balance - y_hat) %>%
+  mutate(MSE = mean((Balance - y_hat)^2)) %>%
+  mutate(RMSE = sqrt(MSE)) %>%
+  summarise(mean(RMSE))
+
+RMSE1 <- as.numeric(RMSE1)
+
+# generate y_hat on training data - saved as a dataframe
+y_hat <- predict(model1, newdata=credit_train) %>% 
+  tibble::as.tibble()
+
+# convert y_hat to a vector and add y_hat to training dataset
+y_hat <- y_hat$value
+
+# report RMSE on training data
+RMSE1t <- credit_train %>%
+  mutate(y_hat = y_hat) %>%
+  mutate(epsilon = Balance - y_hat) %>%
+  mutate(MSE = mean((Balance - y_hat)^2)) %>%
+  mutate(RMSE = sqrt(MSE)) %>%
+  summarise(mean(RMSE))
+
+RMSE1t <- as.numeric(RMSE1t)
+```
+
+
+#### model2
+```{r, warning=FALSE}
+model2 <- lm(model2_formula, data=credit_train)
+
+# extract regression table in tidy format
+model2 %>% 
+  broom::tidy()
+
+# extract point-by-point info in tidy format
+model2 %>% 
+  broom::augment() %>% 
+  head()
+
+# extract summary stats info in tidy format
+model2 %>% 
+  broom::glance()
+
+# generate y_hat on test data- saved as a dataframe
+y_hat <- predict(model2, newdata = credit_test) %>% 
+  tibble::as.tibble()
+
+# convert y_hat to a vector and add y_hat to test dataset
+y_hat <- y_hat$value
+
+# report RMSE on test data
+RMSE2 <- credit_test %>%
+  mutate(y_hat = y_hat) %>%
+  mutate(epsilon = Balance - y_hat) %>%
+  mutate(MSE = mean((Balance - y_hat)^2)) %>%
+  mutate(RMSE = sqrt(MSE)) %>%
+  summarise(mean(RMSE))
+
+RMSE2 <- as.numeric(RMSE2)
+
+# generate y_hat on training data- saved as a dataframe
+y_hat <- predict(model2, newdata = credit_train) %>% 
+  tibble::as.tibble()
+
+# convert y_hat to a vector and add y_hat to training dataset
+y_hat <- y_hat$value
+
+# report RMSE on train data
+RMSE2t <- credit_train %>%
+  mutate(y_hat = y_hat) %>%
+  mutate(epsilon = Balance - y_hat) %>%
+  mutate(MSE = mean((Balance - y_hat)^2)) %>%
+  mutate(RMSE = sqrt(MSE)) %>%
+  summarise(mean(RMSE))
+
+RMSE2t <- as.numeric(RMSE2t)
+```
+
+
+#### model3
+```{r, warning=FALSE}
+model3 <- lm(model3_formula, data=credit_train)
+
+# extract regression table in tidy format
+model3 %>% 
+  broom::tidy()
+
+# extract point-by-point info in tidy format
+model3 %>% 
+  broom::augment() %>% 
+  head()
+
+# extract summary stats info in tidy format
+model3 %>% 
+  broom::glance()
+
+# generate y_hat on test data - saved as a dataframe
+y_hat <- predict(model3, newdata = credit_test) %>% 
+  tibble::as.tibble()
+
+# convert y_hat to a vector and add y_hat to test dataset
+y_hat <- y_hat$value
+
+# report RMSE on test data
+RMSE3 <- credit_test %>%
+  mutate(y_hat = y_hat) %>%
+  mutate(epsilon = Balance - y_hat) %>%
+  mutate(MSE = mean((Balance - y_hat)^2)) %>%
+  mutate(RMSE = sqrt(MSE)) %>%
+  summarise(mean(RMSE))
+
+RMSE3 <- as.numeric(RMSE3)
+
+# generate y_hat on training data - saved as a dataframe
+y_hat <- predict(model3, newdata = credit_train) %>% 
+  tibble::as.tibble()
+
+# convert y_hat to a vector and add y_hat to training dataset
+y_hat <- y_hat$value
+
+# report RMSE on train data
+RMSE3t <- credit_train %>%
+  mutate(y_hat = y_hat) %>%
+  mutate(epsilon = Balance - y_hat) %>%
+  mutate(MSE = mean((Balance - y_hat)^2)) %>%
+  mutate(RMSE = sqrt(MSE)) %>%
+  summarise(mean(RMSE))
+
+RMSE3t <- as.numeric(RMSE3t)
+```
+
+#### model4
+```{r, warning=FALSE}
+model4 <- lm(model4_formula, data=credit_train)
+
+# extract regression table in tidy format
+model2 %>% 
+  broom::tidy()
+
+# extract point-by-point info in tidy format
+model2 %>% 
+  broom::augment() %>% 
+  head()
+
+# extract summary stats info in tidy format
+model4 %>% 
+  broom::glance()
+
+# generate y_hat on test data- saved as a dataframe
+y_hat <- predict(model4, newdata = credit_test) %>% 
+  tibble::as.tibble()
+
+# convert y_hat to a vector and add y_hat to test dataset
+y_hat <- y_hat$value
+
+# report RMSE on test data
+RMSE4 <- credit_test %>%
+  mutate(y_hat = y_hat) %>%
+  mutate(epsilon = Balance - y_hat) %>%
+  mutate(MSE = mean((Balance - y_hat)^2)) %>%
+  mutate(RMSE = sqrt(MSE)) %>%
+  summarise(mean(RMSE))
+
+RMSE4 <- as.numeric(RMSE4)
+
+# generate y_hat on training data- saved as a dataframe
+y_hat <- predict(model4, newdata = credit_train) %>% 
+  tibble::as.tibble()
+
+# convert y_hat to a vector and add y_hat to training dataset
+y_hat <- y_hat$value
+
+# report RMSE on train data
+RMSE4t <- credit_train %>%
+  mutate(y_hat = y_hat) %>%
+  mutate(epsilon = Balance - y_hat) %>%
+  mutate(MSE = mean((Balance - y_hat)^2)) %>%
+  mutate(RMSE = sqrt(MSE)) %>%
+  summarise(mean(RMSE))
+
+RMSE4t <- as.numeric(RMSE4t)
 
 ```
+
+
+#### model5
+```{r, warning=FALSE}
+model5 <- lm(model5_formula, data=credit_train)
+
+# extract regression table in tidy format
+model5 %>% 
+  broom::tidy()
+
+# extract point-by-point info in tidy format
+model5 %>% 
+  broom::augment() %>% 
+  head()
+
+# extract summary stats info in tidy format
+model5 %>% 
+  broom::glance()
+
+# generate y_hat on test data - saved as a dataframe
+y_hat <- predict(model5, newdata = credit_test) %>% 
+  tibble::as.tibble()
+
+# convert y_hat to a vector and add y_hat to test dataset
+y_hat <- y_hat$value
+
+# report RMSE on test data
+RMSE5 <- credit_test %>%
+  mutate(y_hat = y_hat) %>%
+  mutate(epsilon = Balance - y_hat) %>%
+  mutate(MSE = mean((Balance - y_hat)^2)) %>%
+  mutate(RMSE = sqrt(MSE)) %>%
+  summarise(mean(RMSE))
+
+RMSE5 <- as.numeric(RMSE5)
+
+# generate y_hat on training data - saved as a dataframe
+y_hat <- predict(model5, newdata = credit_train) %>% 
+  tibble::as.tibble()
+
+# convert y_hat to a vector and add y_hat to training dataset
+y_hat <- y_hat$value
+
+# report RMSE on train data
+RMSE5t <- credit_train %>%
+  mutate(y_hat = y_hat) %>%
+  mutate(epsilon = Balance - y_hat) %>%
+  mutate(MSE = mean((Balance - y_hat)^2)) %>%
+  mutate(RMSE = sqrt(MSE)) %>%
+  summarise(mean(RMSE))
+
+RMSE5t <- as.numeric(RMSE5t)
+```
+
+
+#### model6
+```{r, warning=FALSE}
+model6 <- lm(model6_formula, data=credit_train)
+
+# extract regression table in tidy format
+model6 %>% 
+  broom::tidy()
+
+# extract point-by-point info in tidy format
+model6 %>% 
+  broom::augment() %>% 
+  head()
+
+# extract summary stats info in tidy format
+model6 %>% 
+  broom::glance()
+
+# generate y_hat on test data - saved as a dataframe
+y_hat <- predict(model6, newdata = credit_test) %>% 
+  tibble::as.tibble()
+
+# convert y_hat to a vector and add y_hat to test dataset
+y_hat <- y_hat$value
+
+# report RMSE on test data
+RMSE6 <- credit_test %>%
+  mutate(y_hat = y_hat) %>%
+  mutate(epsilon = Balance - y_hat) %>%
+  mutate(MSE = mean((Balance - y_hat)^2)) %>%
+  mutate(RMSE = sqrt(MSE)) %>%
+  summarise(mean(RMSE))
+
+RMSE6 <- as.numeric(RMSE6)
+
+# generate y_hat on training data - saved as a dataframe
+y_hat <- predict(model6, newdata = credit_train) %>% 
+  tibble::as.tibble()
+
+# convert y_hat to a vector and add y_hat to training dataset
+y_hat <- y_hat$value
+
+# report RMSE on train data
+RMSE6t <- credit_train %>%
+  mutate(y_hat = y_hat) %>%
+  mutate(epsilon = Balance - y_hat) %>%
+  mutate(MSE = mean((Balance - y_hat)^2)) %>%
+  mutate(RMSE = sqrt(MSE)) %>%
+  summarise(mean(RMSE))
+
+RMSE6t <- as.numeric(RMSE6t)
+```
+
+
+#### model7
+```{r, warning=FALSE}
+model7 <- lm(model7_formula, data=credit_train)
+
+# extract regression table in tidy format
+model7 %>% 
+  broom::tidy()
+
+# extract point-by-point info in tidy format
+model7 %>% 
+  broom::augment() %>% 
+  head()
+
+# extract summary stats info in tidy format
+model7 %>% 
+  broom::glance()
+
+# generate y_hat on test data - saved as a dataframe
+y_hat <- predict(model7, newdata = credit_test) %>% 
+  tibble::as.tibble()
+
+# convert y_hat to a vector and add y_hat to test dataset
+y_hat <- y_hat$value
+
+# report RMSE on test data
+RMSE7 <- credit_test %>%
+  mutate(y_hat = y_hat) %>%
+  mutate(epsilon = Balance - y_hat) %>%
+  mutate(MSE = mean((Balance - y_hat)^2)) %>%
+  mutate(RMSE = sqrt(MSE)) %>%
+  summarise(mean(RMSE))
+
+RMSE7 <- as.numeric(RMSE7)
+
+# generate y_hat on training data - saved as a dataframe
+y_hat <- predict(model7, newdata = credit_train) %>% 
+  tibble::as.tibble()
+
+# convert y_hat to a vector and add y_hat to training dataset
+y_hat <- y_hat$value
+
+# report RMSE on train data
+RMSE7t <- credit_train %>%
+  mutate(y_hat = y_hat) %>%
+  mutate(epsilon = Balance - y_hat) %>%
+  mutate(MSE = mean((Balance - y_hat)^2)) %>%
+  mutate(RMSE = sqrt(MSE)) %>%
+  summarise(mean(RMSE))
+
+RMSE7t <- as.numeric(RMSE7t)
+```
+
+
+## RMSE vs. Number of Coefficients
+```{r, warning=FALSE}
+RMSE_train <- c(RMSE1t, RMSE2t, RMSE3t, RMSE4t, RMSE5t, RMSE6t, RMSE7t)
+RMSE_test <- c(RMSE1, RMSE2, RMSE3, RMSE4, RMSE5, RMSE6, RMSE7)
+
+# Save results in a data frame. Note this data frame is in wide format.
+results <- data.frame(
+  num_coefficients = 1:7,
+  RMSE_train,
+  RMSE_test
+) 
+
+# Some cleaning of results
+results <- results %>% 
+  # More intuitive names:
+  rename(
+    `Training data` = RMSE_train,
+    `Test data` = RMSE_test
+  ) %>% 
+  # Convert results data frame to "tidy" data format i.e. long format, so that we
+  # can ggplot it
+  gather(type, RMSE, -num_coefficients)
+
+ggplot(results, aes(x=num_coefficients, y=RMSE, col=type)) +
+  geom_line() + 
+  labs(x="# of coefficients", y="RMSE", col="Data used to evaluate \nperformance of fitted model")
+```
+
+
+# Interpret the graph
+
+Compare and contrast the two curves and hypothesize as to the root cause of any differences.
+
+> The two curves are fairly similar, however, we see slight differences for all numbers of coefficients except 3. For 1 and 2 coefficients the RMSE obtained using the testing data is higher than the blue line indicating that the training data was used to evaluate the performance of the fitted model, which follows the pattern we observed in the previous plot. For number of coefficients 4 to 7 we see that the blue line is higher than the red line. 
+These lines might be closer because of the fact that more observations were used to fit a model in this instance than the amount used for the previous model. This results in a model that is more representative of the data and thus a more accurate model in terms of prediction.
