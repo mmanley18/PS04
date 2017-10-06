@@ -45,7 +45,7 @@ model7_formula <- as.formula("Balance ~ Income + Limit + Rating + Age + Cards + 
 
 ... where `credit_train` is defined below, along with `credit_test`.
 
-```{r}
+```{r, include=FALSE}
 set.seed(79)
 credit_train <- credit %>% 
   sample_n(20)
@@ -54,10 +54,10 @@ credit_test <- credit %>%
 ```
 
 
-> We can expect that when calculating the RMSE from predictions using the training data that it will be lower than the RMSE from predictions using the testing data (aka indicates a more accurate model) because the model is fit to meet the characteristics of the training data, thus the predictions will be a better representation of the training data, but not necessarily the entire population.
+> We can expect that when calculating the RMSE from predictions using the training data that it will be lower than the RMSE from predictions using the testing data (aka indicates a more accurate model) because the model is fit to meet the characteristics of the training data, thus the predictions will be a better representation of the training data, but not necessarily the entire population. With a lower RMSE score we can assume that we are not overfitting or underfitting the data with our model, which is ideal.
 
 #### model1
-```{r, warning=FALSE}
+```{r, echo=TRUE, warning=FALSE, message=FALSE, results="hide"}
 
 model1 <- lm(model1_formula, data=credit_train)
 
@@ -111,7 +111,7 @@ RMSE1t <- as.numeric(RMSE1t)
 
 
 #### model2
-```{r, warning=FALSE}
+```{r, echo=TRUE, warning=FALSE, message=FALSE, results="hide"}
 model2 <- lm(model2_formula, data=credit_train)
 
 # extract regression table in tidy format
@@ -164,7 +164,7 @@ RMSE2t <- as.numeric(RMSE2t)
 
 
 #### model3
-```{r, warning=FALSE}
+```{r, echo=TRUE, warning=FALSE, message=FALSE, results="hide"}
 model3 <- lm(model3_formula, data=credit_train)
 
 # extract regression table in tidy format
@@ -216,7 +216,7 @@ RMSE3t <- as.numeric(RMSE3t)
 ```
 
 #### model4
-```{r, warning=FALSE}
+```{r, echo=TRUE, warning=FALSE, message=FALSE, results="hide"}
 model4 <- lm(model4_formula, data=credit_train)
 
 # extract regression table in tidy format
@@ -270,7 +270,7 @@ RMSE4t <- as.numeric(RMSE4t)
 
 
 #### model5
-```{r, warning=FALSE}
+```{r, echo=TRUE, warning=FALSE, message=FALSE, results="hide"}
 model5 <- lm(model5_formula, data=credit_train)
 
 # extract regression table in tidy format
@@ -323,7 +323,7 @@ RMSE5t <- as.numeric(RMSE5t)
 
 
 #### model6
-```{r, warning=FALSE}
+```{r, echo=TRUE, warning=FALSE, message=FALSE, results="hide"}
 model6 <- lm(model6_formula, data=credit_train)
 
 # extract regression table in tidy format
@@ -376,7 +376,7 @@ RMSE6t <- as.numeric(RMSE6t)
 
 
 #### model7
-```{r, warning=FALSE}
+```{r, echo=TRUE, warning=FALSE, message=FALSE, results="hide"}
 model7 <- lm(model7_formula, data=credit_train)
 
 # extract regression table in tidy format
@@ -462,7 +462,7 @@ ggplot(results, aes(x=num_coefficients, y=RMSE, col=type)) +
 Compare and contrast the two curves and hypothesize as to the root cause of any differences.
 
 > As anticipated, the RMSE was lower when predictions were calculated on the training dataset rather than on the test dataset. With that being said, the curve that represents the performance of the model using training data does not provide us with an accurate insight on model performance as it was trained and tested using the same data. Therefore, if we wish to take anything away from this graphic we will need to focus on the red curve, representing the test data used to evaluated performance of the fitted model. 
-We see that both curves have relatively high RMSE values when coeff = 1,2 and then drops of at 3, increases ever so slightly for 4 coefficients and then increases more drastically for 5,6,7 coefficients. Therefore based on this graphic it appears that the most efficient model is that which includes 3 coefficients
+We see that both curves have relatively high RMSE values when coeff = 1,2 and then drops of at 3, increases ever so slightly for 4 coefficients and then increases more drastically for 5,6,7 coefficients. Therefore based on this graphic it appears that the most efficient model is that which includes 3 coefficients. The low RMSE score shows us that we have not underfit or overfit the model to the data, so this is the most appropriate model to use.
 
 
 
@@ -482,7 +482,7 @@ credit_test <- credit %>%
 
 
 #### model1
-```{r, warning=FALSE}
+```{r, echo=TRUE, warning=FALSE, message=FALSE, results="hide"}
 
 model1 <- lm(model1_formula, data=credit_train)
 
@@ -536,7 +536,7 @@ RMSE1t <- as.numeric(RMSE1t)
 
 
 #### model2
-```{r, warning=FALSE}
+```{r, echo=TRUE, warning=FALSE, message=FALSE, results="hide"}
 model2 <- lm(model2_formula, data=credit_train)
 
 # extract regression table in tidy format
@@ -589,7 +589,7 @@ RMSE2t <- as.numeric(RMSE2t)
 
 
 #### model3
-```{r, warning=FALSE}
+```{r, echo=TRUE, warning=FALSE, message=FALSE, results="hide"}
 model3 <- lm(model3_formula, data=credit_train)
 
 # extract regression table in tidy format
@@ -641,7 +641,7 @@ RMSE3t <- as.numeric(RMSE3t)
 ```
 
 #### model4
-```{r, warning=FALSE}
+```{r, echo=TRUE, warning=FALSE, message=FALSE, results="hide"}
 model4 <- lm(model4_formula, data=credit_train)
 
 # extract regression table in tidy format
@@ -695,7 +695,7 @@ RMSE4t <- as.numeric(RMSE4t)
 
 
 #### model5
-```{r, warning=FALSE}
+```{r, echo=TRUE, warning=FALSE, message=FALSE, results="hide"}
 model5 <- lm(model5_formula, data=credit_train)
 
 # extract regression table in tidy format
@@ -748,7 +748,7 @@ RMSE5t <- as.numeric(RMSE5t)
 
 
 #### model6
-```{r, warning=FALSE}
+```{r, echo=TRUE, warning=FALSE, message=FALSE, results="hide"}
 model6 <- lm(model6_formula, data=credit_train)
 
 # extract regression table in tidy format
@@ -801,7 +801,7 @@ RMSE6t <- as.numeric(RMSE6t)
 
 
 #### model7
-```{r, warning=FALSE}
+```{r, echo=TRUE, warning=FALSE, message=FALSE, results="hide"}
 model7 <- lm(model7_formula, data=credit_train)
 
 # extract regression table in tidy format

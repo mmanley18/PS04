@@ -242,13 +242,8 @@ model5_formula &lt;- as.formula(&quot;Balance ~ Income + Limit + Rating + Age&qu
 model6_formula &lt;- as.formula(&quot;Balance ~ Income + Limit + Rating + Age + Cards&quot;)
 model7_formula &lt;- as.formula(&quot;Balance ~ Income + Limit + Rating + Age + Cards + Education&quot;)</code></pre>
 <p>… where <code>credit_train</code> is defined below, along with <code>credit_test</code>.</p>
-<pre class="r"><code>set.seed(79)
-credit_train &lt;- credit %&gt;% 
-  sample_n(20)
-credit_test &lt;- credit %&gt;% 
-  anti_join(credit_train, by=&quot;ID&quot;)</code></pre>
 <blockquote>
-<p>We can expect that when calculating the RMSE from predictions using the training data will be lower than the RMSE from predictions using the testing data (aka indicates a more accurate model) because the model is fit to meet the characteristics of the training data, thus the predictions will be a better representation of the data.</p>
+<p>We can expect that when calculating the RMSE from predictions using the training data that it will be lower than the RMSE from predictions using the testing data (aka indicates a more accurate model) because the model is fit to meet the characteristics of the training data, thus the predictions will be a better representation of the training data, but not necessarily the entire population. With a lower RMSE score we can assume that we are not overfitting or underfitting the data with our model, which is ideal.</p>
 </blockquote>
 <div id="model1" class="section level4">
 <h4>model1</h4>
@@ -256,33 +251,18 @@ credit_test &lt;- credit %&gt;%
 
 # extract regression table in tidy format
 model1 %&gt;% 
-  broom::tidy()</code></pre>
-<pre><code>##          term estimate std.error statistic      p.value
-## 1 (Intercept)   498.45   84.1748  5.921606 1.060907e-05</code></pre>
-<pre class="r"><code># extract point-by-point info in tidy format
+  broom::tidy()
+
+# extract point-by-point info in tidy format
 model1 %&gt;% 
   broom::augment() %&gt;% 
-  head()</code></pre>
-<pre><code>## Warning: Deprecated: please use `purrr::possibly()` instead</code></pre>
-<pre><code>## Warning: Deprecated: please use `purrr::possibly()` instead</code></pre>
-<pre><code>## Warning: Deprecated: please use `purrr::possibly()` instead</code></pre>
-<pre><code>## Warning: Deprecated: please use `purrr::possibly()` instead</code></pre>
-<pre><code>## Warning: Deprecated: please use `purrr::possibly()` instead</code></pre>
-<pre><code>##   Balance .fitted .se.fit  .resid .hat   .sigma      .cooksd  .std.resid
-## 1     907  498.45 84.1748  408.55 0.05 373.9246 6.525579e-02  1.11348998
-## 2     453  498.45 84.1748  -45.45 0.05 386.6003 8.076001e-04 -0.12387252
-## 3     541  498.45 84.1748   42.55 0.05 386.6196 7.078280e-04  0.11596867
-## 4     269  498.45 84.1748 -229.45 0.05 382.7556 2.058281e-02 -0.62535865
-## 5     489  498.45 84.1748   -9.45 0.05 386.7498 3.491341e-05 -0.02575567
-## 6    1020  498.45 84.1748  521.55 0.05 365.6136 1.063458e-01  1.42146787</code></pre>
-<pre class="r"><code># extract summary stats info in tidy format
+  head()
+
+# extract summary stats info in tidy format
 model1 %&gt;% 
-  broom::glance()</code></pre>
-<pre><code>##   r.squared adj.r.squared    sigma statistic p.value df    logLik      AIC
-## 1         0             0 376.4412        NA      NA  1 -146.4811 296.9621
-##        BIC deviance df.residual
-## 1 298.9536  2692451          19</code></pre>
-<pre class="r"><code># generate y_hat on test data- saved as a dataframe
+  broom::glance()
+
+# generate y_hat on test data- saved as a dataframe
 y_hat &lt;- predict(model1, newdata=credit_test) %&gt;% 
   tibble::as.tibble()
 
@@ -322,41 +302,18 @@ RMSE1t &lt;- as.numeric(RMSE1t)</code></pre>
 
 # extract regression table in tidy format
 model2 %&gt;% 
-  broom::tidy()</code></pre>
-<pre><code>##          term   estimate  std.error statistic    p.value
-## 1 (Intercept) 314.041178 138.777387  2.262913 0.03624189
-## 2      Income   3.865482   2.366478  1.633432 0.11974707</code></pre>
-<pre class="r"><code># extract point-by-point info in tidy format
+  broom::tidy()
+
+# extract point-by-point info in tidy format
 model2 %&gt;% 
   broom::augment() %&gt;% 
-  head()</code></pre>
-<pre><code>## Warning: Deprecated: please use `purrr::possibly()` instead</code></pre>
-<pre><code>## Warning: Deprecated: please use `purrr::possibly()` instead</code></pre>
-<pre><code>## Warning: Deprecated: please use `purrr::possibly()` instead</code></pre>
-<pre><code>## Warning: Deprecated: please use `purrr::possibly()` instead</code></pre>
-<pre><code>## Warning: Deprecated: please use `purrr::possibly()` instead</code></pre>
-<pre><code>##   Balance Income  .fitted   .se.fit     .resid       .hat   .sigma
-## 1     907 21.551 397.3462 101.70901  509.65381 0.07940935 348.3341
-## 2     453 28.316 423.4962  92.83958   29.50383 0.06616360 371.3206
-## 3     541 53.401 520.4618  81.82383   20.53820 0.05139400 371.3592
-## 4     269 54.319 524.0103  82.20954 -255.01031 0.05187967 365.9224
-## 5     489 42.529 478.4363  81.63129   10.56373 0.05115241 371.3851
-## 6    1020 56.256 531.4977  83.20384  488.50225 0.05314220 350.8684
-##        .cooksd  .std.resid
-## 1 9.341399e-02  1.47169697
-## 2 2.534878e-04  0.08459006
-## 3 9.246735e-05  0.05842463
-## 4 1.440485e-02 -0.72560857
-## 5 2.433494e-05  0.03004660
-## 6 5.429077e-02  1.39091498</code></pre>
-<pre class="r"><code># extract summary stats info in tidy format
+  head()
+
+# extract summary stats info in tidy format
 model2 %&gt;% 
-  broom::glance()</code></pre>
-<pre><code>##   r.squared adj.r.squared    sigma statistic   p.value df    logLik
-## 1 0.1290927    0.08070899 360.9305  2.668102 0.1197471  2 -145.0989
-##        AIC      BIC deviance df.residual
-## 1 296.1977 299.1849  2344875          18</code></pre>
-<pre class="r"><code># generate y_hat on test data- saved as a dataframe
+  broom::glance()
+
+# generate y_hat on test data- saved as a dataframe
 y_hat &lt;- predict(model2, newdata = credit_test) %&gt;% 
   tibble::as.tibble()
 
@@ -396,42 +353,18 @@ RMSE2t &lt;- as.numeric(RMSE2t)</code></pre>
 
 # extract regression table in tidy format
 model3 %&gt;% 
-  broom::tidy()</code></pre>
-<pre><code>##          term     estimate    std.error statistic      p.value
-## 1 (Intercept) -206.5507051 102.30354623 -2.018998 5.954441e-02
-## 2      Income   -5.5555496   1.79987948 -3.086623 6.693622e-03
-## 3       Limit    0.2164126   0.03039323  7.120421 1.716048e-06</code></pre>
-<pre class="r"><code># extract point-by-point info in tidy format
+  broom::tidy()
+
+# extract point-by-point info in tidy format
 model3 %&gt;% 
   broom::augment() %&gt;% 
-  head()</code></pre>
-<pre><code>## Warning: Deprecated: please use `purrr::possibly()` instead</code></pre>
-<pre><code>## Warning: Deprecated: please use `purrr::possibly()` instead</code></pre>
-<pre><code>## Warning: Deprecated: please use `purrr::possibly()` instead</code></pre>
-<pre><code>## Warning: Deprecated: please use `purrr::possibly()` instead</code></pre>
-<pre><code>## Warning: Deprecated: please use `purrr::possibly()` instead</code></pre>
-<pre><code>##   Balance Income Limit  .fitted  .se.fit     .resid       .hat   .sigma
-## 1     907 21.551  5380 838.0212 81.12129   68.97882 0.18999455 190.8761
-## 2     453 28.316  4391 586.4059 53.05757 -133.40588 0.08127672 188.6534
-## 3     541 53.401  5319 647.8758 45.82889 -106.87576 0.06063873 189.8442
-## 4     269 54.319  3063 154.5490 67.00169  114.45095 0.12961134 189.3679
-## 5     489 42.529  4986 636.2103 47.56778 -147.21032 0.06532768 188.0205
-## 6    1020 56.256  5521 675.7300 47.44416  344.26999 0.06498856 169.9363
-##       .cooksd .std.resid
-## 1 0.013260104  0.4118201
-## 2 0.016492892 -0.7478566
-## 3 0.007554286 -0.5925140
-## 4 0.021567786  0.6591717
-## 5 0.015595710 -0.8181714
-## 6 0.084791366  1.9130505</code></pre>
-<pre class="r"><code># extract summary stats info in tidy format
+  head()
+
+# extract summary stats info in tidy format
 model3 %&gt;% 
-  broom::glance()</code></pre>
-<pre><code>##   r.squared adj.r.squared    sigma statistic      p.value df    logLik
-## 1 0.7813096     0.7555813 186.1077  30.36774 2.446539e-06  3 -131.2801
-##        AIC      BIC deviance df.residual
-## 1 270.5602 274.5431 588813.1          17</code></pre>
-<pre class="r"><code># generate y_hat on test data - saved as a dataframe
+  broom::glance()
+
+# generate y_hat on test data - saved as a dataframe
 y_hat &lt;- predict(model3, newdata = credit_test) %&gt;% 
   tibble::as.tibble()
 
@@ -471,41 +404,18 @@ RMSE3t &lt;- as.numeric(RMSE3t)</code></pre>
 
 # extract regression table in tidy format
 model2 %&gt;% 
-  broom::tidy()</code></pre>
-<pre><code>##          term   estimate  std.error statistic    p.value
-## 1 (Intercept) 314.041178 138.777387  2.262913 0.03624189
-## 2      Income   3.865482   2.366478  1.633432 0.11974707</code></pre>
-<pre class="r"><code># extract point-by-point info in tidy format
+  broom::tidy()
+
+# extract point-by-point info in tidy format
 model2 %&gt;% 
   broom::augment() %&gt;% 
-  head()</code></pre>
-<pre><code>## Warning: Deprecated: please use `purrr::possibly()` instead</code></pre>
-<pre><code>## Warning: Deprecated: please use `purrr::possibly()` instead</code></pre>
-<pre><code>## Warning: Deprecated: please use `purrr::possibly()` instead</code></pre>
-<pre><code>## Warning: Deprecated: please use `purrr::possibly()` instead</code></pre>
-<pre><code>## Warning: Deprecated: please use `purrr::possibly()` instead</code></pre>
-<pre><code>##   Balance Income  .fitted   .se.fit     .resid       .hat   .sigma
-## 1     907 21.551 397.3462 101.70901  509.65381 0.07940935 348.3341
-## 2     453 28.316 423.4962  92.83958   29.50383 0.06616360 371.3206
-## 3     541 53.401 520.4618  81.82383   20.53820 0.05139400 371.3592
-## 4     269 54.319 524.0103  82.20954 -255.01031 0.05187967 365.9224
-## 5     489 42.529 478.4363  81.63129   10.56373 0.05115241 371.3851
-## 6    1020 56.256 531.4977  83.20384  488.50225 0.05314220 350.8684
-##        .cooksd  .std.resid
-## 1 9.341399e-02  1.47169697
-## 2 2.534878e-04  0.08459006
-## 3 9.246735e-05  0.05842463
-## 4 1.440485e-02 -0.72560857
-## 5 2.433494e-05  0.03004660
-## 6 5.429077e-02  1.39091498</code></pre>
-<pre class="r"><code># extract summary stats info in tidy format
+  head()
+
+# extract summary stats info in tidy format
 model4 %&gt;% 
-  broom::glance()</code></pre>
-<pre><code>##   r.squared adj.r.squared    sigma statistic      p.value df    logLik
-## 1 0.7814927     0.7405226 191.7551   19.0747 1.557192e-05  4 -131.2717
-##        AIC      BIC deviance df.residual
-## 1 272.5434 277.5221 588320.2          16</code></pre>
-<pre class="r"><code># generate y_hat on test data- saved as a dataframe
+  broom::glance()
+
+# generate y_hat on test data- saved as a dataframe
 y_hat &lt;- predict(model4, newdata = credit_test) %&gt;% 
   tibble::as.tibble()
 
@@ -545,44 +455,18 @@ RMSE4t &lt;- as.numeric(RMSE4t)</code></pre>
 
 # extract regression table in tidy format
 model5 %&gt;% 
-  broom::tidy()</code></pre>
-<pre><code>##          term     estimate  std.error  statistic     p.value
-## 1 (Intercept) -270.2158372 191.720336 -1.4094271 0.179103734
-## 2      Income   -5.6082054   1.873253 -2.9938323 0.009086121
-## 3       Limit    0.3341997   0.237054  1.4098040 0.178994420
-## 4      Rating   -1.8766132   3.635776 -0.5161521 0.613272795
-## 5         Age    3.3766640   2.892866  1.1672383 0.261335026</code></pre>
-<pre class="r"><code># extract point-by-point info in tidy format
+  broom::tidy()
+
+# extract point-by-point info in tidy format
 model5 %&gt;% 
   broom::augment() %&gt;% 
-  head()</code></pre>
-<pre><code>## Warning: Deprecated: please use `purrr::possibly()` instead</code></pre>
-<pre><code>## Warning: Deprecated: please use `purrr::possibly()` instead</code></pre>
-<pre><code>## Warning: Deprecated: please use `purrr::possibly()` instead</code></pre>
-<pre><code>## Warning: Deprecated: please use `purrr::possibly()` instead</code></pre>
-<pre><code>## Warning: Deprecated: please use `purrr::possibly()` instead</code></pre>
-<pre><code>##   Balance Income Limit Rating Age  .fitted   .se.fit     .resid      .hat
-## 1     907 21.551  5380    420  51 790.9484 123.89245  116.05162 0.4268980
-## 2     453 28.316  4391    316  29 543.3665  85.53200  -90.36654 0.2034659
-## 3     541 53.401  5319    377  35 618.6086  80.78950  -77.60860 0.1815283
-## 4     269 54.319  3063    248  59 182.6288  72.43885   86.37120 0.1459411
-## 5     489 42.529  4986    369  37 590.0587  63.50666 -101.05874 0.1121690
-## 6    1020 56.256  5521    406  72 740.6203  73.46157  279.37971 0.1500911
-##     .sigma     .cooksd .std.resid
-## 1 191.9510 0.097370456  0.8084488
-## 2 194.4003 0.014566750 -0.5339772
-## 3 194.9311 0.009078647 -0.4524027
-## 4 194.6789 0.008302410  0.4928812
-## 5 194.1703 0.008083970 -0.5656216
-## 6 178.7848 0.090211981  1.5981807</code></pre>
-<pre class="r"><code># extract summary stats info in tidy format
+  head()
+
+# extract summary stats info in tidy format
 model5 %&gt;% 
-  broom::glance()</code></pre>
-<pre><code>##   r.squared adj.r.squared    sigma statistic      p.value df    logLik
-## 1 0.7996871     0.7462703 189.6194  14.97071 4.052938e-05  5 -130.4023
-##        AIC      BIC deviance df.residual
-## 1 272.8047 278.7791 539332.8          15</code></pre>
-<pre class="r"><code># generate y_hat on test data - saved as a dataframe
+  broom::glance()
+
+# generate y_hat on test data - saved as a dataframe
 y_hat &lt;- predict(model5, newdata = credit_test) %&gt;% 
   tibble::as.tibble()
 
@@ -622,45 +506,18 @@ RMSE5t &lt;- as.numeric(RMSE5t)</code></pre>
 
 # extract regression table in tidy format
 model6 %&gt;% 
-  broom::tidy()</code></pre>
-<pre><code>##          term     estimate   std.error   statistic    p.value
-## 1 (Intercept) -274.8734446 205.7758184 -1.33579080 0.20292791
-## 2      Income   -5.5953266   1.9443693 -2.87770772 0.01216615
-## 3       Limit    0.3423934   0.2634499  1.29965270 0.21471341
-## 4      Rating   -1.9961024   4.0147641 -0.49719046 0.62677164
-## 5         Age    3.3266963   3.0504076  1.09057434 0.29387510
-## 6       Cards    3.4158629  40.0488131  0.08529249 0.93323662</code></pre>
-<pre class="r"><code># extract point-by-point info in tidy format
+  broom::tidy()
+
+# extract point-by-point info in tidy format
 model6 %&gt;% 
   broom::augment() %&gt;% 
-  head()</code></pre>
-<pre><code>## Warning: Deprecated: please use `purrr::possibly()` instead</code></pre>
-<pre><code>## Warning: Deprecated: please use `purrr::possibly()` instead</code></pre>
-<pre><code>## Warning: Deprecated: please use `purrr::possibly()` instead</code></pre>
-<pre><code>## Warning: Deprecated: please use `purrr::possibly()` instead</code></pre>
-<pre><code>## Warning: Deprecated: please use `purrr::possibly()` instead</code></pre>
-<pre><code>##   Balance Income Limit Rating Age Cards  .fitted   .se.fit    .resid
-## 1     907 21.551  5380    420  51     5 794.9958 136.70782 112.00419
-## 2     453 28.316  4391    316  29     2 542.6761  88.88040 -89.67613
-## 3     541 53.401  5319    377  35     3 621.6722  90.99277 -80.67220
-## 4     269 54.319  3063    248  59     3 181.4342  76.25913  87.56583
-## 5     489 42.529  4986    369  37     2 587.6940  71.32772 -98.69395
-## 6    1020 56.256  5521    406  72     2 736.6459  89.16462 283.35406
-##        .hat   .sigma     .cooksd .std.resid
-## 1 0.4853819 198.9734 0.099523913  0.7956831
-## 2 0.2051676 201.7110 0.011304649 -0.5126105
-## 3 0.2150357 202.0590 0.009831147 -0.4640314
-## 4 0.1510360 201.9179 0.006955318  0.4843267
-## 5 0.1321337 201.5000 0.007396641 -0.5398990
-## 6 0.2064819 183.5276 0.113965356  1.6210614</code></pre>
-<pre class="r"><code># extract summary stats info in tidy format
+  head()
+
+# extract summary stats info in tidy format
 model6 %&gt;% 
-  broom::glance()</code></pre>
-<pre><code>##   r.squared adj.r.squared    sigma statistic      p.value df    logLik
-## 1 0.7997911     0.7282879 196.2238  11.18539 0.0001720214  6 -130.3971
-##        AIC      BIC deviance df.residual
-## 1 274.7943 281.7644 539052.7          14</code></pre>
-<pre class="r"><code># generate y_hat on test data - saved as a dataframe
+  broom::glance()
+
+# generate y_hat on test data - saved as a dataframe
 y_hat &lt;- predict(model6, newdata = credit_test) %&gt;% 
   tibble::as.tibble()
 
@@ -700,46 +557,18 @@ RMSE6t &lt;- as.numeric(RMSE6t)</code></pre>
 
 # extract regression table in tidy format
 model7 %&gt;% 
-  broom::tidy()</code></pre>
-<pre><code>##          term    estimate   std.error   statistic    p.value
-## 1 (Intercept) -435.936258 248.3586330 -1.75526920 0.10273354
-## 2      Income   -5.298145   1.9426265 -2.72731011 0.01727025
-## 3       Limit    0.337122   0.2608478  1.29240873 0.21871620
-## 4      Rating   -2.028531   3.9745815 -0.51037592 0.61834344
-## 5         Age    3.145603   3.0240207  1.04020537 0.31720487
-## 6       Cards    2.557903  39.6541722  0.06450528 0.94954927
-## 7   Education   15.057533  13.2819072  1.13368754 0.27740006</code></pre>
-<pre class="r"><code># extract point-by-point info in tidy format
+  broom::tidy()
+
+# extract point-by-point info in tidy format
 model7 %&gt;% 
   broom::augment() %&gt;% 
-  head()</code></pre>
-<pre><code>## Warning: Deprecated: please use `purrr::possibly()` instead</code></pre>
-<pre><code>## Warning: Deprecated: please use `purrr::possibly()` instead</code></pre>
-<pre><code>## Warning: Deprecated: please use `purrr::possibly()` instead</code></pre>
-<pre><code>## Warning: Deprecated: please use `purrr::possibly()` instead</code></pre>
-<pre><code>## Warning: Deprecated: please use `purrr::possibly()` instead</code></pre>
-<pre><code>##   Balance Income Limit Rating Age Cards Education  .fitted   .se.fit
-## 1     907 21.551  5380    420  51     5        18 855.8676 145.59824
-## 2     453 28.316  4391    316  29     2        10 500.2420  95.61906
-## 3     541 53.401  5319    377  35     3        12 607.9934  90.88420
-## 4     269 54.319  3063    248  59     3         8 119.5273  93.17304
-## 5     489 42.529  4986    369  37     2        11 558.2372  75.24078
-## 6    1020 56.256  5521    406  72     2        16 776.1980  94.91442
-##      .resid      .hat   .sigma     .cooksd .std.resid
-## 1  51.13242 0.5617833 200.9535 0.028956243  0.3976309
-## 2 -47.24196 0.2422956 201.5789 0.003565827 -0.2793871
-## 3 -66.99340 0.2188937 200.9992 0.006095870 -0.3902162
-## 4 149.47267 0.2300579 196.1156 0.032824877  0.8769222
-## 5 -69.23723 0.1500248 201.0211 0.003768675 -0.3866027
-## 6 243.80203 0.2387377 185.3991 0.092701232  1.4384622</code></pre>
-<pre class="r"><code># extract summary stats info in tidy format
+  head()
+
+# extract summary stats info in tidy format
 model7 %&gt;% 
-  broom::glance()</code></pre>
-<pre><code>##   r.squared adj.r.squared    sigma statistic      p.value df    logLik
-## 1 0.8178039     0.7337135 194.2548  9.725285 0.0003531456  7 -129.4544
-##        AIC      BIC deviance df.residual
-## 1 274.9087 282.8746 490553.9          13</code></pre>
-<pre class="r"><code># generate y_hat on test data - saved as a dataframe
+  broom::glance()
+
+# generate y_hat on test data - saved as a dataframe
 y_hat &lt;- predict(model7, newdata = credit_test) %&gt;% 
   tibble::as.tibble()
 
@@ -806,13 +635,409 @@ ggplot(results, aes(x=num_coefficients, y=RMSE, col=type)) +
 <h1>Interpret the graph</h1>
 <p>Compare and contrast the two curves and hypothesize as to the root cause of any differences.</p>
 <blockquote>
-<p>As anticipated prior to ____ the accuracy of the 7 models, the RMSE was lower when predictions were calculated on the training dataset rather than on the test dataset. With that being said, the curve that represents the performance of the model using training data does not provide us with valid insight on model performance as it was trained and tested using the same data. Therefore, if we wish to take anything away from this graphic we will need to focus on the red curve, representing the test data used to evaluated performance of the fitted model. We see that both curves have relatively high RMSE values when coeff = 1,2 and then drops of at 3, increases ever so slightly for 4 coefficients and then increases more drastically for 5,6,7 coefficients. Therefore based on this graphic it appears that the most efficient model is that which includes 3 coefficients</p>
+<p>As anticipated, the RMSE was lower when predictions were calculated on the training dataset rather than on the test dataset. With that being said, the curve that represents the performance of the model using training data does not provide us with an accurate insight on model performance as it was trained and tested using the same data. Therefore, if we wish to take anything away from this graphic we will need to focus on the red curve, representing the test data used to evaluated performance of the fitted model. We see that both curves have relatively high RMSE values when coeff = 1,2 and then drops of at 3, increases ever so slightly for 4 coefficients and then increases more drastically for 5,6,7 coefficients. Therefore based on this graphic it appears that the most efficient model is that which includes 3 coefficients. The low RMSE score shows us that we have not underfit or overfit the model to the data, so this is the most appropriate model to use.</p>
 </blockquote>
-<p>*** if these variables were shuffled up, would this affect the general shape of this graphic?</p>
 </div>
 <div id="bonus" class="section level1">
 <h1>Bonus</h1>
 <p>Repeat the whole process, but let <code>credit_train</code> be a random sample of size 380 from <code>credit</code> instead of 20. Now compare and contrast this graph with the one above and hypothesize as to the root cause of any differences.</p>
+<pre class="r"><code>set.seed(79)
+credit_train &lt;- credit %&gt;% 
+  sample_n(380)
+credit_test &lt;- credit %&gt;% 
+  anti_join(credit_train, by=&quot;ID&quot;)</code></pre>
+<div id="model1-1" class="section level4">
+<h4>model1</h4>
+<pre class="r"><code>model1 &lt;- lm(model1_formula, data=credit_train)
+
+# extract regression table in tidy format
+model1 %&gt;% 
+  broom::tidy()
+
+# extract point-by-point info in tidy format
+model1 %&gt;% 
+  broom::augment() %&gt;% 
+  head()
+
+# extract summary stats info in tidy format
+model1 %&gt;% 
+  broom::glance()
+
+# generate y_hat on test data- saved as a dataframe
+y_hat &lt;- predict(model1, newdata=credit_test) %&gt;% 
+  tibble::as.tibble()
+
+# convert y_hat to a vector and add y_hat to test dataset
+y_hat &lt;- y_hat$value
+
+# report RMSE on test data
+RMSE1 &lt;- credit_test %&gt;%
+  mutate(y_hat = y_hat) %&gt;%
+  mutate(epsilon = Balance - y_hat) %&gt;%
+  mutate(MSE = mean((Balance - y_hat)^2)) %&gt;%
+  mutate(RMSE = sqrt(MSE)) %&gt;%
+  summarise(mean(RMSE))
+
+RMSE1 &lt;- as.numeric(RMSE1)
+
+# generate y_hat on training data - saved as a dataframe
+y_hat &lt;- predict(model1, newdata=credit_train) %&gt;% 
+  tibble::as.tibble()
+
+# convert y_hat to a vector and add y_hat to training dataset
+y_hat &lt;- y_hat$value
+
+# report RMSE on training data
+RMSE1t &lt;- credit_train %&gt;%
+  mutate(y_hat = y_hat) %&gt;%
+  mutate(epsilon = Balance - y_hat) %&gt;%
+  mutate(MSE = mean((Balance - y_hat)^2)) %&gt;%
+  mutate(RMSE = sqrt(MSE)) %&gt;%
+  summarise(mean(RMSE))
+
+RMSE1t &lt;- as.numeric(RMSE1t)</code></pre>
+</div>
+<div id="model2-1" class="section level4">
+<h4>model2</h4>
+<pre class="r"><code>model2 &lt;- lm(model2_formula, data=credit_train)
+
+# extract regression table in tidy format
+model2 %&gt;% 
+  broom::tidy()
+
+# extract point-by-point info in tidy format
+model2 %&gt;% 
+  broom::augment() %&gt;% 
+  head()
+
+# extract summary stats info in tidy format
+model2 %&gt;% 
+  broom::glance()
+
+# generate y_hat on test data- saved as a dataframe
+y_hat &lt;- predict(model2, newdata = credit_test) %&gt;% 
+  tibble::as.tibble()
+
+# convert y_hat to a vector and add y_hat to test dataset
+y_hat &lt;- y_hat$value
+
+# report RMSE on test data
+RMSE2 &lt;- credit_test %&gt;%
+  mutate(y_hat = y_hat) %&gt;%
+  mutate(epsilon = Balance - y_hat) %&gt;%
+  mutate(MSE = mean((Balance - y_hat)^2)) %&gt;%
+  mutate(RMSE = sqrt(MSE)) %&gt;%
+  summarise(mean(RMSE))
+
+RMSE2 &lt;- as.numeric(RMSE2)
+
+# generate y_hat on training data- saved as a dataframe
+y_hat &lt;- predict(model2, newdata = credit_train) %&gt;% 
+  tibble::as.tibble()
+
+# convert y_hat to a vector and add y_hat to training dataset
+y_hat &lt;- y_hat$value
+
+# report RMSE on train data
+RMSE2t &lt;- credit_train %&gt;%
+  mutate(y_hat = y_hat) %&gt;%
+  mutate(epsilon = Balance - y_hat) %&gt;%
+  mutate(MSE = mean((Balance - y_hat)^2)) %&gt;%
+  mutate(RMSE = sqrt(MSE)) %&gt;%
+  summarise(mean(RMSE))
+
+RMSE2t &lt;- as.numeric(RMSE2t)</code></pre>
+</div>
+<div id="model3-1" class="section level4">
+<h4>model3</h4>
+<pre class="r"><code>model3 &lt;- lm(model3_formula, data=credit_train)
+
+# extract regression table in tidy format
+model3 %&gt;% 
+  broom::tidy()
+
+# extract point-by-point info in tidy format
+model3 %&gt;% 
+  broom::augment() %&gt;% 
+  head()
+
+# extract summary stats info in tidy format
+model3 %&gt;% 
+  broom::glance()
+
+# generate y_hat on test data - saved as a dataframe
+y_hat &lt;- predict(model3, newdata = credit_test) %&gt;% 
+  tibble::as.tibble()
+
+# convert y_hat to a vector and add y_hat to test dataset
+y_hat &lt;- y_hat$value
+
+# report RMSE on test data
+RMSE3 &lt;- credit_test %&gt;%
+  mutate(y_hat = y_hat) %&gt;%
+  mutate(epsilon = Balance - y_hat) %&gt;%
+  mutate(MSE = mean((Balance - y_hat)^2)) %&gt;%
+  mutate(RMSE = sqrt(MSE)) %&gt;%
+  summarise(mean(RMSE))
+
+RMSE3 &lt;- as.numeric(RMSE3)
+
+# generate y_hat on training data - saved as a dataframe
+y_hat &lt;- predict(model3, newdata = credit_train) %&gt;% 
+  tibble::as.tibble()
+
+# convert y_hat to a vector and add y_hat to training dataset
+y_hat &lt;- y_hat$value
+
+# report RMSE on train data
+RMSE3t &lt;- credit_train %&gt;%
+  mutate(y_hat = y_hat) %&gt;%
+  mutate(epsilon = Balance - y_hat) %&gt;%
+  mutate(MSE = mean((Balance - y_hat)^2)) %&gt;%
+  mutate(RMSE = sqrt(MSE)) %&gt;%
+  summarise(mean(RMSE))
+
+RMSE3t &lt;- as.numeric(RMSE3t)</code></pre>
+</div>
+<div id="model4-1" class="section level4">
+<h4>model4</h4>
+<pre class="r"><code>model4 &lt;- lm(model4_formula, data=credit_train)
+
+# extract regression table in tidy format
+model2 %&gt;% 
+  broom::tidy()
+
+# extract point-by-point info in tidy format
+model2 %&gt;% 
+  broom::augment() %&gt;% 
+  head()
+
+# extract summary stats info in tidy format
+model4 %&gt;% 
+  broom::glance()
+
+# generate y_hat on test data- saved as a dataframe
+y_hat &lt;- predict(model4, newdata = credit_test) %&gt;% 
+  tibble::as.tibble()
+
+# convert y_hat to a vector and add y_hat to test dataset
+y_hat &lt;- y_hat$value
+
+# report RMSE on test data
+RMSE4 &lt;- credit_test %&gt;%
+  mutate(y_hat = y_hat) %&gt;%
+  mutate(epsilon = Balance - y_hat) %&gt;%
+  mutate(MSE = mean((Balance - y_hat)^2)) %&gt;%
+  mutate(RMSE = sqrt(MSE)) %&gt;%
+  summarise(mean(RMSE))
+
+RMSE4 &lt;- as.numeric(RMSE4)
+
+# generate y_hat on training data- saved as a dataframe
+y_hat &lt;- predict(model4, newdata = credit_train) %&gt;% 
+  tibble::as.tibble()
+
+# convert y_hat to a vector and add y_hat to training dataset
+y_hat &lt;- y_hat$value
+
+# report RMSE on train data
+RMSE4t &lt;- credit_train %&gt;%
+  mutate(y_hat = y_hat) %&gt;%
+  mutate(epsilon = Balance - y_hat) %&gt;%
+  mutate(MSE = mean((Balance - y_hat)^2)) %&gt;%
+  mutate(RMSE = sqrt(MSE)) %&gt;%
+  summarise(mean(RMSE))
+
+RMSE4t &lt;- as.numeric(RMSE4t)</code></pre>
+</div>
+<div id="model5-1" class="section level4">
+<h4>model5</h4>
+<pre class="r"><code>model5 &lt;- lm(model5_formula, data=credit_train)
+
+# extract regression table in tidy format
+model5 %&gt;% 
+  broom::tidy()
+
+# extract point-by-point info in tidy format
+model5 %&gt;% 
+  broom::augment() %&gt;% 
+  head()
+
+# extract summary stats info in tidy format
+model5 %&gt;% 
+  broom::glance()
+
+# generate y_hat on test data - saved as a dataframe
+y_hat &lt;- predict(model5, newdata = credit_test) %&gt;% 
+  tibble::as.tibble()
+
+# convert y_hat to a vector and add y_hat to test dataset
+y_hat &lt;- y_hat$value
+
+# report RMSE on test data
+RMSE5 &lt;- credit_test %&gt;%
+  mutate(y_hat = y_hat) %&gt;%
+  mutate(epsilon = Balance - y_hat) %&gt;%
+  mutate(MSE = mean((Balance - y_hat)^2)) %&gt;%
+  mutate(RMSE = sqrt(MSE)) %&gt;%
+  summarise(mean(RMSE))
+
+RMSE5 &lt;- as.numeric(RMSE5)
+
+# generate y_hat on training data - saved as a dataframe
+y_hat &lt;- predict(model5, newdata = credit_train) %&gt;% 
+  tibble::as.tibble()
+
+# convert y_hat to a vector and add y_hat to training dataset
+y_hat &lt;- y_hat$value
+
+# report RMSE on train data
+RMSE5t &lt;- credit_train %&gt;%
+  mutate(y_hat = y_hat) %&gt;%
+  mutate(epsilon = Balance - y_hat) %&gt;%
+  mutate(MSE = mean((Balance - y_hat)^2)) %&gt;%
+  mutate(RMSE = sqrt(MSE)) %&gt;%
+  summarise(mean(RMSE))
+
+RMSE5t &lt;- as.numeric(RMSE5t)</code></pre>
+</div>
+<div id="model6-1" class="section level4">
+<h4>model6</h4>
+<pre class="r"><code>model6 &lt;- lm(model6_formula, data=credit_train)
+
+# extract regression table in tidy format
+model6 %&gt;% 
+  broom::tidy()
+
+# extract point-by-point info in tidy format
+model6 %&gt;% 
+  broom::augment() %&gt;% 
+  head()
+
+# extract summary stats info in tidy format
+model6 %&gt;% 
+  broom::glance()
+
+# generate y_hat on test data - saved as a dataframe
+y_hat &lt;- predict(model6, newdata = credit_test) %&gt;% 
+  tibble::as.tibble()
+
+# convert y_hat to a vector and add y_hat to test dataset
+y_hat &lt;- y_hat$value
+
+# report RMSE on test data
+RMSE6 &lt;- credit_test %&gt;%
+  mutate(y_hat = y_hat) %&gt;%
+  mutate(epsilon = Balance - y_hat) %&gt;%
+  mutate(MSE = mean((Balance - y_hat)^2)) %&gt;%
+  mutate(RMSE = sqrt(MSE)) %&gt;%
+  summarise(mean(RMSE))
+
+RMSE6 &lt;- as.numeric(RMSE6)
+
+# generate y_hat on training data - saved as a dataframe
+y_hat &lt;- predict(model6, newdata = credit_train) %&gt;% 
+  tibble::as.tibble()
+
+# convert y_hat to a vector and add y_hat to training dataset
+y_hat &lt;- y_hat$value
+
+# report RMSE on train data
+RMSE6t &lt;- credit_train %&gt;%
+  mutate(y_hat = y_hat) %&gt;%
+  mutate(epsilon = Balance - y_hat) %&gt;%
+  mutate(MSE = mean((Balance - y_hat)^2)) %&gt;%
+  mutate(RMSE = sqrt(MSE)) %&gt;%
+  summarise(mean(RMSE))
+
+RMSE6t &lt;- as.numeric(RMSE6t)</code></pre>
+</div>
+<div id="model7-1" class="section level4">
+<h4>model7</h4>
+<pre class="r"><code>model7 &lt;- lm(model7_formula, data=credit_train)
+
+# extract regression table in tidy format
+model7 %&gt;% 
+  broom::tidy()
+
+# extract point-by-point info in tidy format
+model7 %&gt;% 
+  broom::augment() %&gt;% 
+  head()
+
+# extract summary stats info in tidy format
+model7 %&gt;% 
+  broom::glance()
+
+# generate y_hat on test data - saved as a dataframe
+y_hat &lt;- predict(model7, newdata = credit_test) %&gt;% 
+  tibble::as.tibble()
+
+# convert y_hat to a vector and add y_hat to test dataset
+y_hat &lt;- y_hat$value
+
+# report RMSE on test data
+RMSE7 &lt;- credit_test %&gt;%
+  mutate(y_hat = y_hat) %&gt;%
+  mutate(epsilon = Balance - y_hat) %&gt;%
+  mutate(MSE = mean((Balance - y_hat)^2)) %&gt;%
+  mutate(RMSE = sqrt(MSE)) %&gt;%
+  summarise(mean(RMSE))
+
+RMSE7 &lt;- as.numeric(RMSE7)
+
+# generate y_hat on training data - saved as a dataframe
+y_hat &lt;- predict(model7, newdata = credit_train) %&gt;% 
+  tibble::as.tibble()
+
+# convert y_hat to a vector and add y_hat to training dataset
+y_hat &lt;- y_hat$value
+
+# report RMSE on train data
+RMSE7t &lt;- credit_train %&gt;%
+  mutate(y_hat = y_hat) %&gt;%
+  mutate(epsilon = Balance - y_hat) %&gt;%
+  mutate(MSE = mean((Balance - y_hat)^2)) %&gt;%
+  mutate(RMSE = sqrt(MSE)) %&gt;%
+  summarise(mean(RMSE))
+
+RMSE7t &lt;- as.numeric(RMSE7t)</code></pre>
+</div>
+<div id="rmse-vs.number-of-coefficients-1" class="section level2">
+<h2>RMSE vs. Number of Coefficients</h2>
+<pre class="r"><code>RMSE_train &lt;- c(RMSE1t, RMSE2t, RMSE3t, RMSE4t, RMSE5t, RMSE6t, RMSE7t)
+RMSE_test &lt;- c(RMSE1, RMSE2, RMSE3, RMSE4, RMSE5, RMSE6, RMSE7)
+
+# Save results in a data frame. Note this data frame is in wide format.
+results &lt;- data.frame(
+  num_coefficients = 1:7,
+  RMSE_train,
+  RMSE_test
+) 
+
+# Some cleaning of results
+results &lt;- results %&gt;% 
+  # More intuitive names:
+  rename(
+    `Training data` = RMSE_train,
+    `Test data` = RMSE_test
+  ) %&gt;% 
+  # Convert results data frame to &quot;tidy&quot; data format i.e. long format, so that we
+  # can ggplot it
+  gather(type, RMSE, -num_coefficients)
+
+ggplot(results, aes(x=num_coefficients, y=RMSE, col=type)) +
+  geom_line() + 
+  labs(x=&quot;# of coefficients&quot;, y=&quot;RMSE&quot;, col=&quot;Data used to evaluate \nperformance of fitted model&quot;)</code></pre>
+<p><img src="data:image/png;base64,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" width="768" /></p>
+</div>
+</div>
+<div id="interpret-the-graph-1" class="section level1">
+<h1>Interpret the graph</h1>
+<p>Compare and contrast the two curves and hypothesize as to the root cause of any differences.</p>
+<blockquote>
+<p>The two curves are fairly similar, however, we see slight differences for all numbers of coefficients except 3. For 1 and 2 coefficients the RMSE obtained using the testing data is higher than the blue line indicating that the training data was used to evaluate the performance of the fitted model, which follows the pattern we observed in the previous plot. For number of coefficients 4 to 7 we see that the blue line is higher than the red line. These lines might be closer because of the fact that more observations were used to fit a model in this instance than the amount used for the previous model. This results in a model that is more representative of the data and thus a more accurate model in terms of prediction.</p>
+</blockquote>
 </div>
 
 
